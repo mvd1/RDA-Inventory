@@ -1,5 +1,6 @@
 import React from "react";
 import Table from "react-bootstrap/Table";
+import { remove } from "dom-helpers";
 
 import Button from "react-bootstrap/Button";
 
@@ -24,7 +25,7 @@ const WarehouseTable = () => {
 						<Button variant="primary" className="tableCellButtons">
 							Edit
 						</Button>
-						<Button variant="danger" className="tableCellButtons">
+						<Button variant="danger" className="tableCellButtons" onClick={() => this.removeWarehouse(index)}> {/*Zach added this, not fully correct [possibly] */}
 							Remove
 						</Button>
 					</div>
