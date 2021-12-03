@@ -6,7 +6,7 @@ import image from '../img/PackRatLogo.png';
 
 const MyNavbar = () => {
     return (
-        <Navbar bg="dark" expand="lg" variant="dark">
+        <Navbar bg="dark" expand="lg" variant="dark" className="navbar">
             <img className="d-inline-block align-top" width="300" height="100" src={image} alt="Logo" />
             <Container>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
