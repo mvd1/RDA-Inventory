@@ -5,28 +5,28 @@ import Button from "react-bootstrap/Button";
 import WarehouseModal from "./WarehouseModal";
 import axios from "axios";
 
-const url = 'http://localhost:5000/warehouse';
+const url = "http://localhost:5000/warehouse";
 
 const WarehouseTable = () => {
-
 	const [warehouseData, setWarehouseData] = useState(null);
 	const [modalIsOpen, setModalState] = useState(false);
 
 	const showModal = () => {
 		setModalState(true);
-	}
+	};
 
 	const hideModal = () => {
 		setModalState(false);
-	}
+	};
 
 	useEffect(() => {
-		axios.get(url, {
-			headers: {
-				'Access-Control-Allow-Origin': '*',
-				'Access-Control-Allow-Credentials': true
-			}
-		})
+		axios
+			.get(url, {
+				headers: {
+					"Access-Control-Allow-Origin": "*",
+					"Access-Control-Allow-Credentials": true,
+				},
+			})
 			.then((response) => {
 				setWarehouseData(response.data);
 			});
@@ -45,15 +45,23 @@ const WarehouseTable = () => {
 							<div>Warehouse Location</div>
 						</th>
 						<th style={{ textAlign: "start" }}>
-							<Button variant="success" className="tableCellButtons" onClick={() => showModal()}>Add New Warehouse</Button>
+							<Button
+								variant="success"
+								className="tableCellButtons"
+								onClick={() => showModal()}
+							>
+								Add New Warehouse
+							</Button>
 						</th>
 					</tr>
 				</thead>
 				<tbody className="warehouseTable">
-					{warehouseData.results.map((warehouse, index) =>
+					{warehouseData.results.map((warehouse, index) => (
 						<tr key={index}>
 							<td className="warehouseFirstColumn">{warehouse.Name}</td>
-							<td>{warehouse.City + ','} {warehouse.State} {warehouse.ZipCode}</td>
+							<td>
+								{warehouse.City + ","} {warehouse.State} {warehouse.ZipCode}
+							</td>
 							<td>
 								<div style={{ width: "600px", display: "flex" }}>
 									<Button variant="success" className="tableCellButtons">
@@ -68,7 +76,7 @@ const WarehouseTable = () => {
 								</div>
 							</td>
 						</tr>
-					)}
+					))}
 				</tbody>
 			</Table>
 		</div>
