@@ -6,7 +6,7 @@ import axios from "axios";
 
 const url = "http://localhost:5000/warehouse";
 
-const WarehouseModal = ({ show, close }) => {
+const WarehouseModal = ({ show, close, editMode, warehouseInfo }) => {
 	const [name, setName] = useState("");
 	const [city, setCity] = useState("");
 	const [usState, setUsState] = useState("");
@@ -25,19 +25,37 @@ const WarehouseModal = ({ show, close }) => {
 				"Access-Control-Allow-Credentials": true,
 			},
 			data: {
-				id: 10,
+				id: 19,
 				name: name,
 				city: city,
 				state: usState,
 				zipcode: zipCode,
 			},
 		});
+		window.location.reload();
 	};
+
+	const resetModalEntries = () => {
+		setName("");
+		setCity("");
+		setUsState("");
+		setZipCode("");
+	};
+
+	// Both of these depend on whether the user clicks the "Add New Warehouse" or the "Edit" Button
+	const ModalTitle =
+		editMode === false ? "Add New Warehouse" : "Edit Warehouse";
+	// const displayName = editMode === false ? name : `${warehouseInfo.Name}`;
+	// const displayCity = editMode === false ? city : `${warehouseInfo.City}`;
+	// const displayUsState =
+	// 	editMode === false ? usState : `${warehouseInfo.State}`;
+	// const displayZipCode =
+	// 	editMode === false ? zipCode : `${warehouseInfo.ZipCode}`;
 
 	return (
 		<Modal show={show} onHide={close}>
 			<Modal.Header>
-				<Modal.Title>Add New Warehouse</Modal.Title>
+				<Modal.Title>{ModalTitle}</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<Form onSubmit={handleSubmit}>
@@ -84,7 +102,10 @@ const WarehouseModal = ({ show, close }) => {
 					<Button
 						variant="secondary"
 						className="modal-button"
-						onClick={() => close()}
+						onClick={() => {
+							close();
+							resetModalEntries();
+						}}
 					>
 						Close
 					</Button>

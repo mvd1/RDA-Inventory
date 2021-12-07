@@ -3,20 +3,29 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 //import { removeItem } from "../actions/removeItem";
 import WarehouseModal from "./WarehouseModal";
+
 import axios from "axios";
 
 const url = "http://localhost:5000/warehouse";
 
 const WarehouseTable = () => {
 	const [warehouseData, setWarehouseData] = useState(null);
-	const [modalIsOpen, setModalState] = useState(false);
+	const [oneWarehouse, setOneWarehouse] = useState(null);
 
+	const [modalIsOpen, setModalState] = useState(false);
 	const showModal = () => {
 		setModalState(true);
 	};
-
 	const hideModal = () => {
 		setModalState(false);
+	};
+
+	const [editModeOn, setModalToEdit] = useState(false);
+	const addModeModal = () => {
+		setModalToEdit(false);
+	};
+	const editModeModal = () => {
+		setModalToEdit(true);
 	};
 
 	useEffect(() => {
@@ -36,7 +45,12 @@ const WarehouseTable = () => {
 
 	return (
 		<div>
-			<WarehouseModal show={modalIsOpen} close={hideModal} />
+			<WarehouseModal
+				show={modalIsOpen}
+				close={hideModal}
+				editMode={editModeOn}
+				warehouseInfo={oneWarehouse}
+			/>
 			<Table bordered className="table">
 				<thead>
 					<tr>
@@ -48,7 +62,10 @@ const WarehouseTable = () => {
 							<Button
 								variant="success"
 								className="tableCellButtons"
-								onClick={() => showModal()}
+								onClick={() => {
+									showModal();
+									addModeModal();
+								}}
 							>
 								Add New Warehouse
 							</Button>
@@ -67,7 +84,15 @@ const WarehouseTable = () => {
 									<Button variant="success" className="tableCellButtons">
 										View Products
 									</Button>
-									<Button variant="primary" className="tableCellButtons">
+									<Button
+										variant="primary"
+										className="tableCellButtons"
+										onClick={() => {
+											showModal();
+											editModeModal();
+											setOneWarehouse(warehouse);
+										}}
+									>
 										Edit
 									</Button>
 									<Button variant="danger" className="tableCellButtons">
