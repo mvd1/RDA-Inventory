@@ -5,14 +5,15 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import ProductModal from './ProductModal';
 
-const url = 'http://localhost:5000/product';
+const productUrl = 'http://localhost:5000/product';
+const warehouseUrl = 'http://localhost:5000/warehouse'; 
 
 const ProductTable = () => {
 	const { id } = useParams();
 
 	const [oneProduct, setOneProduct] = useState(null);
 	const [productData, setProductData] = useState(null);
-	console.log(productData);
+	const [warehouseName, setWarehouseName] = useState(''); 
 
 	const [modalIsOpen, setModalState] = useState(false);
 	const [editModeOn, setModalToEdit] = useState(false);
@@ -37,7 +38,7 @@ const ProductTable = () => {
 		console.log(id);
 		setProductWarehouseID(id);
 		axios
-			.get(`${url}/${id}`, {
+			.get(`${productUrl}/${id}`, {
 				headers: {
 					'Access-Control-Allow-Origin': '*',
 					'Access-Control-Allow-Credentials': true,
@@ -48,12 +49,25 @@ const ProductTable = () => {
 			});
 
 		console.log(productData);
+
+		axios
+			.get(`${warehouseUrl}/${id}`, {
+				headers: {
+					'Access-Control-Allow-Origin': '*',
+					'Access-Control-Allow-Credentials': true,
+				},
+			})
+			.then((response) => {
+				console.log(response.data.results[0].Name); 
+				setWarehouseName(response.data.results[0].Name);
+			});
 	}, [id]);
 
 	if (!productData) return null;
 
 	return (
 		<div>
+			<h1>{warehouseName}</h1>
 			<ProductModal
 				show={modalIsOpen}
 				close={hideModal}
@@ -91,7 +105,7 @@ const ProductTable = () => {
 							<td>{product.Type}</td>
 							<td>{product.UnitPrice}</td>
 							<td>{product.Quantity}</td>
-							<td>{product.Date}</td>
+							<td>{product.Date.substring(0, 10)}</td>
 							<td>{product.UnitPrice * product.Quantity}</td>
 							<td>
 								<div style={{ width: '600px', display: 'flex' }}>
@@ -111,7 +125,7 @@ const ProductTable = () => {
 										className="tableCellButtons"
 										onClick={() => {
 											axios
-												.delete(`${url}/${product.ID}`, {
+												.delete(`${productUrl}/${product.ID}`, {
 													headers: {
 														'Access-Control-Allow-Origin': '*',
 														'Access-Control-Allow-Credentials': true,

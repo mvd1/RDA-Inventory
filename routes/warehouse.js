@@ -23,6 +23,24 @@ router.get('/', (req, res) => {
 	}
 });
 
+router.get('/:id', (req, res) => {
+	const id = req.params.id; 
+	try {
+		const sql = `SELECT * FROM warehouse WHERE ID = '${id}'`;
+		database.query(sql, (error, results, fields) => {
+			if (error) throw error;
+			if (results === undefined) {
+				res.status(404).send({ msg: 'No record found' });
+			} else {
+				res.status(200).send({ results });
+			}
+		});
+	} catch (err) {
+		res.status(500).send('Server Error');
+		console.error(err.message);
+	}
+});
+
 // @route   POST /warehouse
 // @desc    Add a warehouse
 // @access  Public

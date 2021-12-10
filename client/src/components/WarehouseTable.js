@@ -80,7 +80,7 @@ const WarehouseTable = () => {
 							</td>
 							<td>
 								<div style={{ width: '600px', display: 'flex' }}>
-									<Link to={`/product/${warehouse.ID}`}>
+									<Link to={`/product/${warehouse.ID}`} warehouseName={warehouse.Name}>
 										<Button variant="success" className="tableCellButtons">
 											View Products
 										</Button>
@@ -100,19 +100,17 @@ const WarehouseTable = () => {
 										variant="danger"
 										className="tableCellButtons"
 										onClick={() => {
-											axios
+											if (window.confirm('Are you sure you want to delete this warehouse? All products will also be deleted.')) {
+												axios
 												.delete(`${url}/${warehouse.ID}`, {
 													headers: {
 														'Access-Control-Allow-Origin': '*',
 														'Access-Control-Allow-Credentials': true,
 													},
-												})
-												// .then(() => {
-												// 	handleDelete(warehouse.ID);
-												//})
+												}) 
 												.catch((error) => console.error(error));
-											// const newWarehouseData = warehouseData.results.filter(data => data.ID !== warehouse.ID);
-											window.location.reload();
+												window.location.reload(); 
+											}
 										}}
 									>
 										Remove

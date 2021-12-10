@@ -2,6 +2,11 @@ body {
   background-color: #3e455e;
 }
 
+h1 {
+  color: whitesmoke; 
+  margin-left: 0.8em;
+}
+
 .App {
   margin-right: 4em;
 }
