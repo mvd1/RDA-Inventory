@@ -15,7 +15,6 @@ router.get('/:id', (req, res) => {
                 res.status(404).send({ msg: 'No record found' }); 
             }
             else {
-                console.log(results); 
                 res.status(200).send({ results }); 
             }
         });    

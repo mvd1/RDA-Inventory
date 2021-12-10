@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom'; 
-import Table from "react-bootstrap/Table";
-import Button from "react-bootstrap/Button";
-import WarehouseModal from "./WarehouseModal";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import Table from 'react-bootstrap/Table';
+import Button from 'react-bootstrap/Button';
+import WarehouseModal from './WarehouseModal';
+import axios from 'axios';
 
-const url = "http://localhost:5000/warehouse";
+const url = 'http://localhost:5000/warehouse';
 
 const WarehouseTable = () => {
 	const [warehouseData, setWarehouseData] = useState(null);
@@ -31,19 +31,14 @@ const WarehouseTable = () => {
 		axios
 			.get(url, {
 				headers: {
-					"Access-Control-Allow-Origin": "*",
-					"Access-Control-Allow-Credentials": true,
+					'Access-Control-Allow-Origin': '*',
+					'Access-Control-Allow-Credentials': true,
 				},
 			})
 			.then((response) => {
 				setWarehouseData(response.data);
 			});
 	}, []);
-
-	const handleDelete = (id) => {
-		const newWarehouseData = warehouseData.results.filter(warehouse => warehouse.ID !== id); 
-		setWarehouseData(newWarehouseData); 
-	}
 
 	if (!warehouseData) return null;
 
@@ -62,7 +57,7 @@ const WarehouseTable = () => {
 						<th>
 							<div>Warehouse Location</div>
 						</th>
-						<th style={{ textAlign: "start" }}>
+						<th style={{ textAlign: 'start' }}>
 							<Button
 								variant="success"
 								className="tableCellButtons"
@@ -81,10 +76,10 @@ const WarehouseTable = () => {
 						<tr key={index}>
 							<td className="warehouseFirstColumn">{warehouse.Name}</td>
 							<td>
-								{warehouse.City + ","} {warehouse.State} {warehouse.ZipCode}
+								{warehouse.City + ','} {warehouse.State} {warehouse.ZipCode}
 							</td>
 							<td>
-								<div style={{ width: "600px", display: "flex" }}>
+								<div style={{ width: '600px', display: 'flex' }}>
 									<Link to={`/product/${warehouse.ID}`}>
 										<Button variant="success" className="tableCellButtons">
 											View Products
@@ -101,21 +96,25 @@ const WarehouseTable = () => {
 									>
 										Edit
 									</Button>
-									<Button variant="danger" className="tableCellButtons" onClick={() => {
-										axios
-											.delete(`${url}/${warehouse.ID}`, {
-												headers: {
-													"Access-Control-Allow-Origin": "*",
-													"Access-Control-Allow-Credentials": true,
-												},
-											})
-											// .then(() => {
-											// 	handleDelete(warehouse.ID); 
-											//})
-											.catch(error => console.error(error));	
-										// const newWarehouseData = warehouseData.results.filter(data => data.ID !== warehouse.ID);
-										window.location.reload();  
-									}}>
+									<Button
+										variant="danger"
+										className="tableCellButtons"
+										onClick={() => {
+											axios
+												.delete(`${url}/${warehouse.ID}`, {
+													headers: {
+														'Access-Control-Allow-Origin': '*',
+														'Access-Control-Allow-Credentials': true,
+													},
+												})
+												// .then(() => {
+												// 	handleDelete(warehouse.ID);
+												//})
+												.catch((error) => console.error(error));
+											// const newWarehouseData = warehouseData.results.filter(data => data.ID !== warehouse.ID);
+											window.location.reload();
+										}}
+									>
 										Remove
 									</Button>
 								</div>

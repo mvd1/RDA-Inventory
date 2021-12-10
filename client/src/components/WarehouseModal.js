@@ -1,58 +1,57 @@
-import React, { useState } from "react";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import axios from "axios";
+import React, { useState } from 'react';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import axios from 'axios';
 
 const { v4: uuidv4 } = require('uuid');
-const url = "http://localhost:5000/warehouse";
+const url = 'http://localhost:5000/warehouse';
 
 const WarehouseModal = ({ show, close, editMode, warehouseInfo }) => {
-	const [name, setName] = useState(editMode ? `${warehouseInfo.Name}` : '');
-	const [city, setCity] = useState(editMode ? `${warehouseInfo.City}` : '');
-	const [usState, setUsState] = useState(editMode ? `${warehouseInfo.State}` : '');
-	const [zipCode, setZipCode] = useState(editMode ? `${warehouseInfo.ZipCode}` : '');
-	console.log(warehouseInfo); 
-	
+	const [id, setID] = useState(''); 
+	const [name, setName] = useState('');
+	const [city, setCity] = useState('');
+	const [usState, setUsState] = useState('');
+	const [zipCode, setZipCode] = useState('');
 
 	// Both of these depend on whether the user clicks the "Add New Warehouse" or the "Edit" Button
-	const modalTitle = editMode === false ? "Add New Warehouse" : "Edit Warehouse";
+	const modalTitle =
+		editMode === false ? 'Add New Warehouse' : 'Edit Warehouse';
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		const warehouse = { name, city, usState, zipCode }; 
+		const warehouse = { name, city, usState, zipCode };
 		console.log(warehouse);
 
-		if(!editMode) {
+		if (!editMode) {
 			axios({
-				method: "post",
+				method: 'post',
 				url: url,
 				headers: {
-					"Access-Control-Allow-Origin": "*",
-					"Access-Control-Allow-Credentials": true,
+					'Access-Control-Allow-Origin': '*',
+					'Access-Control-Allow-Credentials': true,
 				},
 				data: {
-					id: `'${uuidv4()}'`, 
+					id: `'${uuidv4()}'`,
 					name: name,
 					city: city,
 					state: usState,
-					zipcode: zipCode
+					zipcode: zipCode,
 				},
 			});
-		}
-		else {
+		} else {
 			axios({
-				method: "patch", 
-				url: `${url}/${warehouseInfo.ID}`,
+				method: 'patch',
+				url: `${url}/${id}`,
 				headers: {
-					"Access-Control-Allow-Origin": "*",
-					"Access-Control-Allow-Credentials": true,
+					'Access-Control-Allow-Origin': '*',
+					'Access-Control-Allow-Credentials': true,
 				},
 				data: {
-					name: warehouseInfo.Name,
-					city: warehouseInfo.City,
-					state: warehouseInfo.State,
-					zipcode: warehouseInfo.ZipCode
+					name: name,
+					city: city,
+					state: usState,
+					zipcode: zipCode,
 				},
 			});
 		}
@@ -60,21 +59,26 @@ const WarehouseModal = ({ show, close, editMode, warehouseInfo }) => {
 	};
 
 	const resetModalEntries = () => {
-		setName("");
-		setCity("");
-		setUsState("");
-		setZipCode("");
+		setName('');
+		setCity('');
+		setUsState('');
+		setZipCode('');
 	};
 
-	//const displayName = editMode === false ? name : `${warehouseInfo.Name}`;
-	// const displayCity = editMode === false ? city : `${warehouseInfo.City}`;
-	// const displayUsState =
-	// 	editMode === false ? usState : `${warehouseInfo.State}`;
-	// const displayZipCode =
-	// 	editMode === false ? zipCode : `${warehouseInfo.ZipCode}`;
-
 	return (
-		<Modal show={show} onHide={close}>
+		<Modal
+			show={show}
+			onHide={close}
+			onEnter={() => {
+				if (editMode) {
+					setID(warehouseInfo.ID); 
+					setName(warehouseInfo.Name);
+					setCity(warehouseInfo.City);
+					setUsState(warehouseInfo.State);
+					setZipCode(warehouseInfo.ZipCode);
+				}
+			}}
+		>
 			<Modal.Header>
 				<Modal.Title>{modalTitle}</Modal.Title>
 			</Modal.Header>
