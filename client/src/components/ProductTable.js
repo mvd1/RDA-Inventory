@@ -3,16 +3,39 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import ProductModal from './ProductModal';
 
 const url = 'http://localhost:5000/product';
 
 const ProductTable = () => {
 	const { id } = useParams();
 
+	const [oneProduct, setOneProduct] = useState(null);
 	const [productData, setProductData] = useState(null);
 	console.log(productData);
 
+	const [modalIsOpen, setModalState] = useState(false);
+	const [editModeOn, setModalToEdit] = useState(false);
+
+	const showModal = () => {
+		setModalState(true);
+	};
+	const hideModal = () => {
+		setModalState(false);
+	};
+
+	const addModeModal = () => {
+		setModalToEdit(false);
+	};
+	const editModeModal = () => {
+		setModalToEdit(true);
+	};
+
+	const [productWarehouseID, setProductWarehouseID] = useState('');
+
 	useEffect(() => {
+		console.log(id);
+		setProductWarehouseID(id);
 		axios
 			.get(`${url}/${id}`, {
 				headers: {
@@ -23,12 +46,21 @@ const ProductTable = () => {
 			.then((response) => {
 				setProductData(response.data);
 			});
+
+		console.log(productData);
 	}, [id]);
 
 	if (!productData) return null;
 
 	return (
 		<div>
+			<ProductModal
+				show={modalIsOpen}
+				close={hideModal}
+				editMode={editModeOn}
+				productInfo={oneProduct}
+				productWarehouseID={productWarehouseID}
+			/>
 			<Table bordered className="table">
 				<thead>
 					<tr>
@@ -43,8 +75,8 @@ const ProductTable = () => {
 								variant="success"
 								className="tableCellButtons"
 								onClick={() => {
-									// showModal();
-									// addModeModal();
+									showModal();
+									addModeModal();
 								}}
 							>
 								Add New Product
@@ -67,9 +99,9 @@ const ProductTable = () => {
 										variant="primary"
 										className="tableCellButtons"
 										onClick={() => {
-											// showModal();
-											// editModeModal();
-											// setOneWarehouse(warehouse);
+											showModal();
+											editModeModal();
+											setOneProduct(product);
 										}}
 									>
 										Edit

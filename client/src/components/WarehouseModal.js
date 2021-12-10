@@ -20,8 +20,7 @@ const WarehouseModal = ({ show, close, editMode, warehouseInfo }) => {
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		const warehouse = { name, city, usState, zipCode };
-		console.log(warehouse);
+		// const warehouse = { name, city, usState, zipCode };
 
 		if (!editMode) {
 			axios({
@@ -55,7 +54,7 @@ const WarehouseModal = ({ show, close, editMode, warehouseInfo }) => {
 				},
 			});
 		}
-		// window.location.reload();
+		window.location.reload();
 	};
 
 	const resetModalEntries = () => {
