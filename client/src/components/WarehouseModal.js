@@ -8,7 +8,7 @@ const { v4: uuidv4 } = require('uuid');
 const url = 'http://localhost:5000/warehouse';
 
 const WarehouseModal = ({ show, close, editMode, warehouseInfo }) => {
-	const [id, setID] = useState(''); 
+	const [id, setID] = useState('');
 	const [name, setName] = useState('');
 	const [city, setCity] = useState('');
 	const [usState, setUsState] = useState('');
@@ -55,7 +55,7 @@ const WarehouseModal = ({ show, close, editMode, warehouseInfo }) => {
 				},
 			});
 		}
-		window.location.reload();
+		// window.location.reload();
 	};
 
 	const resetModalEntries = () => {
@@ -71,7 +71,7 @@ const WarehouseModal = ({ show, close, editMode, warehouseInfo }) => {
 			onHide={close}
 			onEnter={() => {
 				if (editMode) {
-					setID(warehouseInfo.ID); 
+					setID(warehouseInfo.ID);
 					setName(warehouseInfo.Name);
 					setCity(warehouseInfo.City);
 					setUsState(warehouseInfo.State);
@@ -90,6 +90,7 @@ const WarehouseModal = ({ show, close, editMode, warehouseInfo }) => {
 							type="text"
 							value={name}
 							onChange={(event) => setName(event.target.value)}
+							maxLength="45"
 							placeholder="Enter Name"
 						/>
 					</Form.Group>
@@ -99,6 +100,7 @@ const WarehouseModal = ({ show, close, editMode, warehouseInfo }) => {
 							type="text"
 							value={city}
 							onChange={(event) => setCity(event.target.value)}
+							maxLength="45"
 							placeholder="Enter City"
 						/>
 					</Form.Group>
@@ -117,7 +119,16 @@ const WarehouseModal = ({ show, close, editMode, warehouseInfo }) => {
 						<Form.Control
 							type="text"
 							value={zipCode}
-							onChange={(event) => setZipCode(event.target.value)}
+							onChange={(event) => {
+								const onlyIntegersAllowed = /^[0-9\b]+$/;
+								if (
+									event.target.value === '' ||
+									onlyIntegersAllowed.test(event.target.value)
+								) {
+									setZipCode(event.target.value);
+								}
+							}}
+							maxLength="5"
 							placeholder="Enter Zip Code"
 						/>
 					</Form.Group>
