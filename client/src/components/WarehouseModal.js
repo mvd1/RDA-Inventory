@@ -4,34 +4,58 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 
+const { v4: uuidv4 } = require('uuid');
 const url = "http://localhost:5000/warehouse";
 
 const WarehouseModal = ({ show, close, editMode, warehouseInfo }) => {
-	const [name, setName] = useState("");
-	const [city, setCity] = useState("");
-	const [usState, setUsState] = useState("");
-	const [zipCode, setZipCode] = useState("");
+	const [name, setName] = useState(editMode ? `${warehouseInfo.Name}` : '');
+	const [city, setCity] = useState(editMode ? `${warehouseInfo.City}` : '');
+	const [usState, setUsState] = useState(editMode ? `${warehouseInfo.State}` : '');
+	const [zipCode, setZipCode] = useState(editMode ? `${warehouseInfo.ZipCode}` : '');
+	console.log(warehouseInfo); 
+	
+
+	// Both of these depend on whether the user clicks the "Add New Warehouse" or the "Edit" Button
+	const modalTitle = editMode === false ? "Add New Warehouse" : "Edit Warehouse";
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		const warehouse = { name, city, usState, zipCode };
+		const warehouse = { name, city, usState, zipCode }; 
 		console.log(warehouse);
 
-		axios({
-			method: "post",
-			url: url,
-			headers: {
-				"Access-Control-Allow-Origin": "*",
-				"Access-Control-Allow-Credentials": true,
-			},
-			data: {
-				id: 19,
-				name: name,
-				city: city,
-				state: usState,
-				zipcode: zipCode,
-			},
-		});
+		if(!editMode) {
+			axios({
+				method: "post",
+				url: url,
+				headers: {
+					"Access-Control-Allow-Origin": "*",
+					"Access-Control-Allow-Credentials": true,
+				},
+				data: {
+					id: `'${uuidv4()}'`, 
+					name: name,
+					city: city,
+					state: usState,
+					zipcode: zipCode
+				},
+			});
+		}
+		else {
+			axios({
+				method: "patch", 
+				url: `${url}/${warehouseInfo.ID}`,
+				headers: {
+					"Access-Control-Allow-Origin": "*",
+					"Access-Control-Allow-Credentials": true,
+				},
+				data: {
+					name: warehouseInfo.Name,
+					city: warehouseInfo.City,
+					state: warehouseInfo.State,
+					zipcode: warehouseInfo.ZipCode
+				},
+			});
+		}
 		window.location.reload();
 	};
 
@@ -42,10 +66,7 @@ const WarehouseModal = ({ show, close, editMode, warehouseInfo }) => {
 		setZipCode("");
 	};
 
-	// Both of these depend on whether the user clicks the "Add New Warehouse" or the "Edit" Button
-	const ModalTitle =
-		editMode === false ? "Add New Warehouse" : "Edit Warehouse";
-	// const displayName = editMode === false ? name : `${warehouseInfo.Name}`;
+	//const displayName = editMode === false ? name : `${warehouseInfo.Name}`;
 	// const displayCity = editMode === false ? city : `${warehouseInfo.City}`;
 	// const displayUsState =
 	// 	editMode === false ? usState : `${warehouseInfo.State}`;
@@ -55,7 +76,7 @@ const WarehouseModal = ({ show, close, editMode, warehouseInfo }) => {
 	return (
 		<Modal show={show} onHide={close}>
 			<Modal.Header>
-				<Modal.Title>{ModalTitle}</Modal.Title>
+				<Modal.Title>{modalTitle}</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<Form onSubmit={handleSubmit}>

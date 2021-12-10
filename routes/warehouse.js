@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
                 res.status(404).send({ msg: 'No record found' }); 
             }
             else {
-                console.log(results); 
+                //console.log(results); 
                 res.status(200).send({ results }); 
             }
         }); 

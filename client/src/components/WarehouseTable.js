@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { Link } from 'react-router-dom'; 
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
-//import { removeItem } from "../actions/removeItem";
 import WarehouseModal from "./WarehouseModal";
-
 import axios from "axios";
 
 const url = "http://localhost:5000/warehouse";
@@ -11,8 +10,9 @@ const url = "http://localhost:5000/warehouse";
 const WarehouseTable = () => {
 	const [warehouseData, setWarehouseData] = useState(null);
 	const [oneWarehouse, setOneWarehouse] = useState(null);
-
 	const [modalIsOpen, setModalState] = useState(false);
+	const [editModeOn, setModalToEdit] = useState(false);
+
 	const showModal = () => {
 		setModalState(true);
 	};
@@ -20,7 +20,6 @@ const WarehouseTable = () => {
 		setModalState(false);
 	};
 
-	const [editModeOn, setModalToEdit] = useState(false);
 	const addModeModal = () => {
 		setModalToEdit(false);
 	};
@@ -40,6 +39,11 @@ const WarehouseTable = () => {
 				setWarehouseData(response.data);
 			});
 	}, []);
+
+	const handleDelete = (id) => {
+		const newWarehouseData = warehouseData.results.filter(warehouse => warehouse.ID !== id); 
+		setWarehouseData(newWarehouseData); 
+	}
 
 	if (!warehouseData) return null;
 
@@ -72,7 +76,7 @@ const WarehouseTable = () => {
 						</th>
 					</tr>
 				</thead>
-				<tbody className="warehouseTable">
+				<tbody className="warehouse-table">
 					{warehouseData.results.map((warehouse, index) => (
 						<tr key={index}>
 							<td className="warehouseFirstColumn">{warehouse.Name}</td>
@@ -81,9 +85,11 @@ const WarehouseTable = () => {
 							</td>
 							<td>
 								<div style={{ width: "600px", display: "flex" }}>
-									<Button variant="success" className="tableCellButtons">
-										View Products
-									</Button>
+									<Link to={`/product/${warehouse.ID}`}>
+										<Button variant="success" className="tableCellButtons">
+											View Products
+										</Button>
+									</Link>
 									<Button
 										variant="primary"
 										className="tableCellButtons"
@@ -95,7 +101,21 @@ const WarehouseTable = () => {
 									>
 										Edit
 									</Button>
-									<Button variant="danger" className="tableCellButtons">
+									<Button variant="danger" className="tableCellButtons" onClick={() => {
+										axios
+											.delete(`${url}/${warehouse.ID}`, {
+												headers: {
+													"Access-Control-Allow-Origin": "*",
+													"Access-Control-Allow-Credentials": true,
+												},
+											})
+											// .then(() => {
+											// 	handleDelete(warehouse.ID); 
+											//})
+											.catch(error => console.error(error));	
+										// const newWarehouseData = warehouseData.results.filter(data => data.ID !== warehouse.ID);
+										window.location.reload();  
+									}}>
 										Remove
 									</Button>
 								</div>
